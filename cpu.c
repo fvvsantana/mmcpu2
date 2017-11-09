@@ -34,7 +34,7 @@ int memory[MAX];		/* Main memory. */
 int reg[NUMREG];		/* Register bank */
 
 
-char loop = 1;			/* Mail loop control. */
+int loop = 1;			/* Main loop control. */
 
 int main (int argc, char *argv[])
 {
