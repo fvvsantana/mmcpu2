@@ -41,5 +41,5 @@ include $(deps)
 .PHONY : clean
 
 clean:
-	rm -f $(LDFLAGS) $(OBJECTS) $(BIN) *~ \#*
+	rm -f $(LDFLAGS) $(OBJECTS) $(BIN) *~ \#*  $(deps)
 
