@@ -29,7 +29,7 @@ PREFIX = /tmp#
 # You need not (and should probably not) change bellow this line.
 
 BIN = cpu
-OBJECTS = cpu.o code.o
+OBJECTS = code.o
 LIB = libmmcpu.a
 LIB_OBJECTS = cpu.o
 LIB_HEADERS = cpu.h
@@ -38,7 +38,7 @@ PROJECT= mmcpu#
 all : $(BIN) $(LIB)
 
 $(BIN) : $(OBJECTS) 
-	$(CC) $^ -o $@
+	$(CC) $(LDFLAGS) $^ -o $@ -l$(LIB:lib%.a=%)
 
 $(LIB) : $(LIB_OBJECTS)
 	$(AR) $(ARFLAGS) $@ $^
@@ -47,23 +47,28 @@ $(LIB) : $(LIB_OBJECTS)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< 
 
 %.d : %.c
-	$(CC) $(CPPFLAGA) $(CFLAGS) -MM -MT '$(<:%.c=%.o) $@' $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MM -MT '$(<:%.c=%.o) $@' $< -o $@
 
-deps = $(OBJECTS:%.o=%.d)
+deps = $(OBJECTS:%.o=%.d) $(LIB_OBJECTS:%.o=%.d)
 
+NO_D :=
+NO_D := $(or $(NO_D), $(findstring clean,$(MAKECMDGOALS)))
+NO_D := $(or $(NO_D), $(findstring uninstall,$(MAKECMDGOALS)))
+ifeq (,$(NO_D))
 include $(deps)
+endif
 
-.PHONY : clean install
+.PHONY : clean install uninstall
 
 clean:
-	rm -f $(LDFLAGS) $(OBJECTS) $(BIN) $(LIB) $(deps) *~ \#*
+	rm -f $(LDFLAGS) $(OBJECTS) $(BIN) $(LIB) $(LIB_OBJECTS) $(deps) *~ \#*
 
 install: $(LIB)
 	install -d $(PREFIX)/lib
-	install -d $(PREFIX)/include/$(PROJECT)
+	install -d $(PREFIX)/$(PROJECT)/include
 	cp $^ $(PREFIX)/lib/
-	cp $(LIB_HEADERS) $(PREFIX)/include/$(PROJECT)/
+	cp $(LIB_HEADERS) $(PREFIX)/$(PROJECT)/include
 
 uninstall:
 	rm -f $(PREFIX)/lib/$(LIB)
-	rm -f $(PREFIX)/include/$(PROJECT)/$(LIB)
+	rm -f $(PREFIX)/$(PROJECT)/$(LIB_HEADERS)
