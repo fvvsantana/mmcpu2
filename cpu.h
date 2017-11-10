@@ -107,3 +107,8 @@ void write_ref_mem(short int, int, int, int);
 extern int memory[];
 extern int reg[];
 extern int loop;
+
+/* Auxiliary stuff. */
+#include <stdio.h>
+#include <stdlib.h>
+#define not_implemented() fprintf(stderr, "Not implemented\n"); exit(EXIT_FAILURE)

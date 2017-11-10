@@ -18,11 +18,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-/* After you have implemented your functions, you may safely remove these lines. */
-#include <stdio.h>
-#include <stdlib.h>
-#define not_implemented() fprintf(stderr, "Not implemented\n"); exit(EXIT_FAILURE)
+#include <mmcpu/cpu.h>
 
 /* Students, you are required to implemented the functions bellow.
    Please, refere to cpu.h for further information. */
