@@ -35,19 +35,23 @@ LIB_OBJECTS = cpu.o
 LIB_HEADERS = cpu.h
 PROJECT= mmcpu#
 
-all : $(BIN) $(LIB)
+CPP_FLAGS = -I.
+LD_FLAGS = -L.
+C_FLAGS =
+
+all : $(LIB) $(BIN) 
 
 $(BIN) : $(OBJECTS) 
-	$(CC) $(LDFLAGS) $^ -o $@ -l$(LIB:lib%.a=%)
+	$(CC) $(LD_FLAGS) $(LDFLAGS) $^ -o $@ -l$(LIB:lib%.a=%)
 
 $(LIB) : $(LIB_OBJECTS)
 	$(AR) $(ARFLAGS) $@ $^
 
 %.o : %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< 
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(CPP_FLAGS) $(C_FLAGS) -c $< 
 
 %.d : %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -MM -MT '$(<:%.c=%.o) $@' $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(CPP_FLAGS) $(C_FLAGS) -MM -MT '$(<:%.c=%.o) $@' $< -o $@
 
 deps = $(OBJECTS:%.o=%.d) $(LIB_OBJECTS:%.o=%.d)
 
@@ -61,13 +65,13 @@ endif
 .PHONY : clean install uninstall
 
 clean:
-	rm -f $(LDFLAGS) $(OBJECTS) $(BIN) $(LIB) $(LIB_OBJECTS) $(deps) *~ \#*
+	rm -f $(OBJECTS) $(BIN) $(LIB) $(LIB_OBJECTS) $(deps) *~ \#*
 
 install: $(LIB)
 	install -d $(PREFIX)/lib
 	install -d $(PREFIX)/$(PROJECT)/include
 	cp $^ $(PREFIX)/lib/
-	cp $(LIB_HEADERS) $(PREFIX)/$(PROJECT)/include
+	cp $(PROJECT)/$(LIB_HEADERS) $(PREFIX)/$(PROJECT)/include
 
 uninstall:
 	rm -f $(PREFIX)/lib/$(LIB)

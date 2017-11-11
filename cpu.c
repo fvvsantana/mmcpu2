@@ -23,8 +23,8 @@
 #include <stdlib.h>
 
 
-#include "mask.h"		/* Useful masks; customize at you please. */
-#include "cpu.h"		/* CPU functions' headers. */
+#include <mmcpu/mask.h>		/* Useful masks; customize at you please. */
+#include <mmcpu/cpu.h>		/* CPU functions' headers. */
 
 
 /* Global vars. */
