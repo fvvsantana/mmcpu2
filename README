@@ -7,30 +7,71 @@
   complete the implementation with their own code.
 
   MMPU is based on "CPU MIPS Multiciclo" [1] by Prof. Paulo Sergio Lopes de
-  Souza of ICMC - University of Sao Paulo.  Original code by Dr. Souza
-  has been largely rewritten to accomodate changes in the project structure,
+  Souza of ICMC - University of Sao Paulo.  Original code by Dr. Paulo
+  has been largely rewritten to accommodate changes in the project structure,
   Make build system, localization and a other changes.
 
   Instructions
   ---------------------------
 
   Students are required to complete the implementation of the simulator by
-  editing the file code.c.
+  editing the file code.c (see source code).
 
-  In order to build the software:
+  In order to do fulfill the assignment, please follow the steps bellow.
 
-  a) On Linux (of course)
+  (These instructions are for GNU/Linux; for other operating systems, corresponding
+   actions should be taking.)
 
-  make
+  a) Get the source code, either from CVS repository or tarball
 
-  b) On Windows (are you kidding, righ?)
+  b) Enter into MMCPU project directory.
 
-  (Please, read the Makefile and figure it out).
+     If you have uncompressed it, say, in $HOME/mmcp
+
+     $ cd $HOME/mmcpu
+
+  c) Build libmmcpu
+
+     $ make
+
+  d) Install libmmcpu.
+
+     For instance, if you want to install it under /tmp
+
+     $ make PREFIX=/tmp install
+
+
+  d) Copy the file code.c to *your own* project directory.
+
+     For instance, if you are going to develop your simulator at $HOME/myproj
+
+     $ cd $HOME
+     $ mkdir myproj
+     $ cd myproj
+     $ cp $HOME/mmcpu/code.c .
+
+     Note that $HOME/myproj is different from $HOME/mmcpu
+
+  e) Build the simulator by linking your code to libmmcpu.
+
+     Within $HOME/myproj
+
+     $ gcc -I/tmp/include -L/tmp/lib code.c -o mycpu -lmmcpu
+
+     That's it it. You may have the program mycpu in your project directory.
+     
+     Optionally, you may want to create a Makefile for your own project.
+
+ After you have gone through the above steps, you shall edit $HOME/myproj/code.c
+ and recompile it repeating step (e) whenever needed.
+
+ When you're done, you may submit your project as specified by the instructor.
+
 
   Bugs
   ------------------------------
 
-  Please, repoert bugs to
+  Please, report bugs to
 
   monaco@icmc.usp.br
   vitor.pin.ribeiro@usp.br
@@ -39,10 +80,9 @@
   -------------------------------
 
   This code is in very alpha stage and it may be updated frequently
-  during this period. If so happens, you may need to update your project.
-  To that end, patches will be realased which you can safely apply
-  to your own code (no API changes will take place in course of
-  the discipline term).
+  during this period. If so happens, you may need to update libmmcpu.
+  To that end, repeat steps from (a) to (e). No API changes will take place
+  in course of the discipline term).
 
 
   
