@@ -17,7 +17,12 @@
 ##   You should have received a copy of the GNU General Public License
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-AM_CPPFLAGS = -I$(top_srcdir)/lib
+AM_CPPFLAGS = @CPP_FLAGS@ -I$(top_builddir)/lib -I$(top_srcdir)/lib -I$(top_builddir) -I$(top_srcdir) 
+AM_CFLAGS =   @C_FLAGS@
+AM_LDFLAGS =  @LD_FLAGS@
+
+
+## AM_CPPFLAGS = -I$(top_srcdir)/lib
 
 bin_PROGRAMS = mycpu
 

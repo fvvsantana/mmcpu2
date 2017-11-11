@@ -30,6 +30,12 @@
 ## augmented the interface (new functions)       CURRENT+1 : 0 : AGE+1
 ## broken old interface (e.g. removed functions) CURRENT+1 : 0 : 0
 
+
+AM_CPPFLAGS = @CPP_FLAGS@ -I$(top_builddir)/lib -I$(top_srcdir)/lib -I$(top_builddir) -I$(top_srcdir)
+AM_CFLAGS =   @C_FLAGS@
+AM_LDFLAGS =  @LD_FLAGS@
+
+
 MMCPU_VERSIONING = 0:0:0 
 
 lib_LTLIBRARIES = libmmcpu.la
@@ -37,4 +43,4 @@ lib_LTLIBRARIES = libmmcpu.la
 libmmcpu_la_SOURCES = cpu.c
 libmmcpu_la_LDFLAGS = -version-info $(MMCPU_VERSIONING)
 
-include_HEADERS = mmcpu/cpu.h
+include_HEADERS = mmcpu/cpu.h mmcpu/mask.h

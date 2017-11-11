@@ -31,6 +31,9 @@ LT_INIT                         dnl Libtool support in 'configure'
 
 AC_PROG_CC			dnl Define CC
 
+AC_SUBST([CPP_FLAGS],"--std=c99 -D_POSIX_C_SOURCE=200809L -Wall") dnl Define flags
+AC_SUBST([C_FLAGS])
+AC_SUBST([LD_FLAGS])
 
 
 AC_CONFIG_FILES([Makefile src/Makefile lib/Makefile])	dnl Name output files
