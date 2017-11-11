@@ -60,13 +60,32 @@
 
      That's it it. You may have the program mycpu in your project directory.
      
-     Optionally, you may want to create a Makefile for your own project.
+  f) Optionally, you may want to create a Makefile for your own project.
+
+     You may use the templace found in subdirectory 'extra' as a boilplate.
+     In this case, you may compile your software with
+
+     make CPPFLAGS=-I/tmp/include LDFLAGS=-L/tmp/lib
+
+  (g) Create a tar ball with your code.
+
+      $ cd $HOME/myproj
+      $ mkdir myproj
+      $ cp code.c COPYING myproj
+      $ tar zcvf myproj.tar.gz myproj
+
+      Alternatively, if you have used the above template, you may just evoke
+
+      $ make CPPFLAGS=-I/tmp/include LDFLAGS=-L/tmp/lib
+      $ make dist
 
  After you have gone through the above steps, you shall edit $HOME/myproj/code.c
  and recompile it repeating step (e) whenever needed.
 
  When you're done, you may submit your project as specified by the instructor.
 
+ Before that, do not forget to edit the comments so as to update authoring
+ information.
 
   Bugs
   ------------------------------

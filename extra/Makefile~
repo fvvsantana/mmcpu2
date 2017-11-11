@@ -1,0 +1,76 @@
+# Makefile - Main Makefile
+#
+#   Copyright 2017  Your Name(s)   <your email(s)>
+#
+#   This file is part of YourProject
+#
+#   YourProject is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# User customizations
+# Edit if you need somethig different from the defaults.
+
+CC = gcc
+AR = ar
+ARFLAGS = rcs
+PREFIX = /tmp#
+
+# Project settings.
+# You need not (and should probably not) change bellow this line.
+
+BIN = mycpu
+OBJECTS = code.o
+LIB = libmmcpu.a
+PROJECT= mycpu#
+
+CPP_FLAGS = -I.
+LD_FLAGS = -L.
+C_FLAGS =
+
+all : $(LIB) $(BIN) 
+
+$(BIN) : $(OBJECTS) 
+	$(CC) $(LD_FLAGS) $(LDFLAGS) $^ -o $@ -l$(LIB:lib%.a=%)
+
+$(LIB) : $(LIB_OBJECTS)
+	$(AR) $(ARFLAGS) $@ $^
+
+%.o : %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(CPP_FLAGS) $(C_FLAGS) -c $< 
+
+%.d : %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(CPP_FLAGS) $(C_FLAGS) -MM -MT '$(<:%.c=%.o) $@' $< -o $@
+
+deps = $(OBJECTS:%.o=%.d) $(LIB_OBJECTS:%.o=%.d)
+
+NO_D :=
+NO_D := $(or $(NO_D), $(findstring clean,$(MAKECMDGOALS)))
+NO_D := $(or $(NO_D), $(findstring uninstall,$(MAKECMDGOALS)))
+ifeq (,$(NO_D))
+include $(deps)
+endif
+
+.PHONY : clean install uninstall
+
+clean:
+	rm -f $(OBJECTS) $(BIN) $(LIB) $(LIB_OBJECTS) $(deps) *~ \#*
+
+install: $(LIB)
+	install -d $(PREFIX)/lib
+	install -d $(PREFIX)/$(PROJECT)/include
+	cp $^ $(PREFIX)/lib/
+	cp $(PROJECT)/$(LIB_HEADERS) $(PREFIX)/$(PROJECT)/include
+
+uninstall:
+	rm -f $(PREFIX)/lib/$(LIB)
+	rm -f $(PREFIX)/$(PROJECT)/$(LIB_HEADERS)
