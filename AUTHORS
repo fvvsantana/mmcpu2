@@ -1,0 +1,24 @@
+
+  MMCPU - Multicycle Mips CPU
+  ------------------------------
+
+  MMCU was written by Francisco Jose Monaco based on "CPU MIPS Multiciclo" by
+  Paulo Sergio Lopes de Souza, University of São Paulo.
+
+  Monaco, F. J. <monaco@usp.br> 
+
+  Aknowledgements
+
+  Dr. Paulo Sergio Lopes de Soouza  <pssouza@icmc.usp.br> for his previous
+  work on the software which inspired MMCPU.
+
+  Vitor Pinto Ribeiro <vitor.pin.ribeiro@usp.br> for his significant help as
+  teaching assistant, MMCPU tester and code contributor.
+
+  The students of Computing Engineering undergraduate course enroled in
+  Computer Organization classes, second semestre of 2017 (ICMC-USP) for their
+  constribution as alpha/beta tester and bug reports.
+
+  
+  
+

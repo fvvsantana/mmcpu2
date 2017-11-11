@@ -1,10 +1,10 @@
 /* code-c - Student's code for mmcpu
 
-   Copyright 2017  Monaco F. J.   <monaco@icmc.usp.br>
+   Copyright 2017  [Your Name]   [<your email>]
 
-   This file is part of Muticlycle Mips CPU (MMCPU)
+   This file is part of [Your Project]
 
-   MMCPU is free software: you can redistribute it and/or modify
+   [Your Project] is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
@@ -37,28 +37,37 @@ void control_unit(int IR, short int *sc)
 }
 
 
-void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int* IRnew, int* MDRnew)
+void instruction_fetch(short int sc, int PC, int ALUOUT, int IR,
+		       int* PCnew, int* IRnew, int* MDRnew)
 {
+  not_implemented();
 }
 
 
-void decode_register(short int sc, int IR, int PC, int A, int B, int *Anew, int *Bnew, int *ALUOUTnew)
+void decode_register(short int sc, int IR, int PC, int A, int B,
+		     int *Anew, int *Bnew, int *ALUOUTnew)
 {
+  not_implemented();
 }
 
 
-void exec_calc_end_branch(short int sc, int A, int B, int IR, int PC, int ALUOUT, int *ALUOUTnew, int *PCnew)
+void exec_calc_end_branch(short int sc, int A, int B, int IR, int PC,
+			  int ALUOUT, int *ALUOUTnew, int *PCnew)
 {
+  not_implemented();
 }
 
 
-void write_r_access_memory(short int sc, int IR, int MDR, int AMUOUT, int PC, int *MDRnew, int *IRnew)
+void write_r_access_memory(short int sc, int IR, int MDR, int AMUOUT,
+			   int PC, int *MDRnew, int *IRnew)
 {
+  not_implemented();
 }
 
 
 void write_ref_mem(short int sc, int IR, int MDR, int ALUOUT)
 {
+  not_implemented();
 }
 
 

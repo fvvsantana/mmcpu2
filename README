@@ -11,6 +11,11 @@
   has been largely rewritten to accommodate changes in the project structure,
   Make build system, localization and a other changes.
 
+  MMCPU source code may be found at http://gitlab.com/monaco/mmcpu.
+
+  MMCPU is Free Software and is distributed under the terms of GNU GPL vr. 3.
+
+
   Instructions
   ---------------------------
 
@@ -19,8 +24,8 @@
 
   In order to do fulfill the assignment, please follow the steps bellow.
 
-  (These instructions are for GNU/Linux; for other operating systems, corresponding
-   actions should be taking.)
+  (These instructions are for GNU/Linux; for other operating systems,
+   corresponding actions should be taking.)
 
   a) Get the source code, either from CVS repository or tarball
 
@@ -30,15 +35,13 @@
 
      $ cd $HOME/mmcpu
 
-  c) Build libmmcpu
-
-     $ make
-
-  d) Install libmmcpu.
+  c) Build and install libmmcpu
 
      For instance, if you want to install it under /tmp
 
-     $ make PREFIX=/tmp install
+     $ ./configure --prefix=/tmp/foo
+     $ make
+     $ make install
 
 
   d) Copy the file code.c to *your own* project directory.
@@ -48,7 +51,7 @@
      $ cd $HOME
      $ mkdir myproj
      $ cd myproj
-     $ cp $HOME/mmcpu/code.c .
+     $ cp $HOME/mmcpu/src/code.c .
 
      Note that $HOME/myproj is different from $HOME/mmcpu
 
@@ -60,10 +63,11 @@
 
      That's it it. You may have the program mycpu in your project directory.
      
-  f) Optionally, you may want to create a Makefile for your own project.
+  f) Optionally, you may want create a Makefile for your own project.
 
-     You may use the templace found in subdirectory 'extra' as a boilplate.
-     In this case, you may compile your software with
+     To that and you may either write your own Makefile or use the template
+     found in subdirectory 'extra' as aboilplate. In this latter case, you can
+     compile your software with
 
      make CPPFLAGS=-I/tmp/include LDFLAGS=-L/tmp/lib
 
@@ -74,18 +78,23 @@
       $ cp code.c COPYING myproj
       $ tar zcvf myproj.tar.gz myproj
 
-      Alternatively, if you have used the above template, you may just evoke
+      Alternatively, if you have used MMCPU's Makefile template, you may
+      just issue
 
       $ make CPPFLAGS=-I/tmp/include LDFLAGS=-L/tmp/lib
       $ make dist
+
+      or 
+
+      $ make CPPFLAGS=-I/tmp/include LDFLAGS=-L/tmp/lib dist
 
  After you have gone through the above steps, you shall edit $HOME/myproj/code.c
  and recompile it repeating step (e) whenever needed.
 
  When you're done, you may submit your project as specified by the instructor.
 
- Before that, do not forget to edit the comments so as to update authoring
- information.
+ Before that, do not forget to edit your project documentation so as to update
+ authoring information.
 
   Bugs
   ------------------------------
