@@ -22,6 +22,7 @@
 /* After you have implemented your functions, you may safely remove these lines. */
 #include <stdio.h>
 #include <stdlib.h>
+#include "mask.h"
 #define not_implemented() fprintf(stderr, "Not implemented\n"); exit(EXIT_FAILURE)
 
 /* Students, you are required to implemented the functions bellow.
@@ -31,7 +32,51 @@
 
 int alu( int a, int b, char alu_op, int *result_alu, char *zero, char *overflow)
 {
-  return 0;
+    char operation = alu_op & separa_controle_ula;
+
+    //to treat overflow
+    long int total;
+    long int la = a;
+    long int lb = b;
+
+    switch(operation){
+        case ativa_soma:
+            total = la + lb;
+            *overflow = total > 0xffffffff;
+            *result_alu = a + b;
+            break;
+
+        case ativa_subtracao:
+            total = la - lb;
+            *overflow = total > 0xffffffff;
+            *result_alu = a - b;
+            break;
+
+        case ativa_and:
+            *result_alu = a & b;
+            *overflow = 0;
+            break;
+
+        case ativa_or:
+            *result_alu = a | b;
+            *overflow = 0;
+            break;
+
+        case ativa_slt:
+            *result_alu = a < b;
+            *overflow = 0;
+            break;
+
+        case ativa_nor:
+            *result_alu = ~(a | b);
+            *overflow = 0;
+            break;
+    }
+
+    //update zero value
+    *zero = !(result_alu);
+
+    return 0;
 }
 
 
