@@ -23,6 +23,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "mask.h"
+
+#define max_int 0xffffffff
+#define opc_rtype 0x00
+#define opc_jmp 0x02
+#define opc_beq 0x04
+#define opc_lw 0x23
+#define opc_sw 0x2b
+
+
 #define not_implemented() fprintf(stderr, "Not implemented\n"); exit(EXIT_FAILURE)
 
 /* Students, you are required to implemented the functions bellow.
@@ -42,13 +51,13 @@ int alu( int a, int b, char alu_op, int *result_alu, char *zero, char *overflow)
     switch(operation){
         case ativa_soma:
             total = la + lb;
-            *overflow = total > 0xffffffff;
+            *overflow = total > max_int;
             *result_alu = a + b;
             break;
 
         case ativa_subtracao:
             total = la - lb;
-            *overflow = total > 0xffffffff;
+            *overflow = total > max_int;
             *result_alu = a - b;
             break;
 
@@ -79,10 +88,149 @@ int alu( int a, int b, char alu_op, int *result_alu, char *zero, char *overflow)
     return 0;
 }
 
+//dispatch table 1
+char dispatchRom1(char opc){
+    switch(opc){
+        case opc_rtype:
+            return 6;
+
+        case opc_jmp:
+            return 9;
+
+        case opc_beq:
+            return 8;
+
+        case opc_lw:
+            return 2;
+
+        case opc_sw:
+            return 2;
+    }
+
+}
+
+//dispatch table 2
+char dispatchRom2(char opc){
+    switch(opc){
+        case opc_lw:
+            return 3;
+
+        case opc_sw:
+            return 5;
+    }
+
+}
 
 void control_unit(int IR, short int *sc)
 {
-  not_implemented();
+    static char state = 0;
+    static char addrCtrl = 0;
+
+    //address select logic (set current state)
+    switch(addrCtrl){
+        case 0:
+            state = 0;
+            break;
+
+        case 1:
+            state = dispatchRom1(((IR & separa_cop) >> 26));
+            break;
+
+        case 2:
+            state = dispatchRom2(((IR & separa_cop) >> 26));
+            break;
+
+        case 3:
+            state++;
+            break;
+
+    }
+
+    //clean sc
+    *sc = 0;
+
+    //update addrCtrl and control signals for the current state
+    switch(state){
+        case 0:
+            *sc |= (ativa_MemRead | 
+                    ativa_IRWrite |
+                    ativa_ALUSrcB0 |
+                    ativa_PCWrite
+                    );
+
+            addrCtrl = 3;
+            break;
+
+        case 1:
+            *sc |= (ativa_ALUSrcB1 | 
+                    ativa_ALUSrcB0
+                    );
+            addrCtrl = 1;
+            break;
+
+        case 2:
+            *sc |= (ativa_ALUSrcA | 
+                    ativa_ALUSrcB1
+                    );
+            addrCtrl = 2;
+            break;
+
+        case 3:
+            *sc |= (ativa_MemRead | 
+                    ativa_IorD
+                    );
+            addrCtrl = 3;
+            break;
+
+        case 4:
+            *sc |= (ativa_RegWrite | 
+                    ativa_MemtoReg
+                    );
+            addrCtrl = 0;
+            break;
+
+        case 5:
+            *sc |= (ativa_MemWrite | 
+                    ativa_IorD
+                    );
+            addrCtrl = 0;
+            break;
+
+        case 6:
+            *sc |= (ativa_ALUSrcA | 
+                    ativa_ALUOp1
+                    );
+            addrCtrl = 3;
+            break;
+
+        case 7:
+            *sc |= (ativa_RegDst | 
+                    ativa_RegWrite
+                    );
+            addrCtrl = 0;
+            break;
+
+        case 8:
+            *sc |= (ativa_ALUSrcA| 
+                    ativa_ALUOp0 |
+                    ativa_PCWriteCond |
+                    ativa_PCSource0 
+                    );
+            addrCtrl = 0;
+            break;
+
+        case 9:
+            *sc |= (ativa_PCWrite | 
+                    ativa_PCSource1
+                    );
+            addrCtrl = 0;
+            break;
+
+    }
+
+
+    not_implemented();
+
 }
 
 
