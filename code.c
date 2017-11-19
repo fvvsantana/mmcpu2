@@ -238,6 +238,7 @@ void control_unit(int IR, short int *sc)
 void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int* IRnew, int* MDRnew)
 {
 
+    //verify if the control signals allow the operation to be done
     if(
         ((sc & separa_IorD) == 0) &&
         ((sc & separa_MemRead) == ativa_MemRead) &&
@@ -247,6 +248,7 @@ void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int
         *IRnew = memory[PC];
     }
 
+    //verify if the control signals allow the operation to be done
     if(
         ((sc & separa_ALUSrcA) == 0) &&
         ((sc & separa_ALUSrcB1) == 0) &&
