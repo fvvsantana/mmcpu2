@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "mask.h"
+#include "cpu.h"
 
 #define max_int 0xffffffff
 #define opc_rtype 0x00
@@ -51,39 +52,39 @@ int alu( int a, int b, char alu_op, int *result_alu, char *zero, char *overflow)
     switch(operation){
         case ativa_soma:
             total = la + lb;
-            *overflow = total > max_int;
-            *result_alu = a + b;
+            if(overflow) *overflow = total > max_int;
+            if(result_alu) *result_alu = a + b;
             break;
 
         case ativa_subtracao:
             total = la - lb;
-            *overflow = total > max_int;
-            *result_alu = a - b;
+            if(overflow) *overflow = total > max_int;
+            if(result_alu) *result_alu = a - b;
             break;
 
         case ativa_and:
-            *result_alu = a & b;
-            *overflow = 0;
+            if(result_alu) *result_alu = a & b;
+            if(overflow) *overflow = 0;
             break;
 
         case ativa_or:
-            *result_alu = a | b;
-            *overflow = 0;
+            if(result_alu) *result_alu = a | b;
+            if(overflow) *overflow = 0;
             break;
 
         case ativa_slt:
-            *result_alu = a < b;
-            *overflow = 0;
+            if(result_alu) *result_alu = a < b;
+            if(overflow) *overflow = 0;
             break;
 
         case ativa_nor:
-            *result_alu = ~(a | b);
-            *overflow = 0;
+            if(result_alu) *result_alu = ~(a | b);
+            if(overflow) *overflow = 0;
             break;
     }
 
     //update zero value
-    *zero = !(result_alu);
+    if(zero) *zero = !(result_alu);
 
     return 0;
 }
@@ -229,13 +230,39 @@ void control_unit(int IR, short int *sc)
     }
 
 
-    not_implemented();
+    //not_implemented();
 
 }
 
 
 void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int* IRnew, int* MDRnew)
 {
+
+    if(
+        ((sc & separa_IorD) == 0) &&
+        ((sc & separa_MemRead) == ativa_MemRead) &&
+        ((sc & separa_IRWrite) == ativa_IRWrite)
+      ){
+        //instruction fetch
+        *IRnew = memory[PC];
+    }
+
+    if(
+        ((sc & separa_ALUSrcA) == 0) &&
+        ((sc & separa_ALUSrcB1) == 0) &&
+        ((sc & separa_ALUSrcB0) == ativa_ALUSrcB0) &&
+        ((sc & separa_ALUOp1) == 0) &&
+        ((sc & separa_ALUOp0) == 0) &&
+        ((sc & separa_PCSource1) == 0) &&
+        ((sc & separa_PCSource0) == 0) &&
+        ((sc & separa_PCWrite) == ativa_PCWrite)
+      ){
+        //update PC (*PCnew = PC + 1)
+        alu(PC, 1, ativa_soma, PCnew, NULL, NULL);
+    }
+
+    //update mdr
+    *MDRnew = *IRnew;
 }
 
 
@@ -256,6 +283,7 @@ void write_r_access_memory(short int sc, int IR, int MDR, int AMUOUT, int PC, in
 
 void write_ref_mem(short int sc, int IR, int MDR, int ALUOUT)
 {
+    not_implemented();
 }
 
 
