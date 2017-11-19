@@ -270,6 +270,22 @@ void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int
 
 void decode_register(short int sc, int IR, int PC, int A, int B, int *Anew, int *Bnew, int *ALUOUTnew)
 {
+    //*Anew = reg[IR[25-21]]
+    *Anew = reg[(IR & separa_rs) >> 21];
+    *Bnew = reg[(IR & separa_rt) >> 16];
+
+    //verify if the control signals allow the operation to be done
+    if(
+        ((sc & separa_ALUSrcA) == 0) &&
+        ((sc & separa_ALUSrcB1) == ativa_ALUSrcB1) &&
+        ((sc & separa_ALUSrcB0) == ativa_ALUSrcB0) &&
+        ((sc & separa_ALUOp1) == 0) &&
+        ((sc & separa_ALUOp0) == 0)
+      ){
+        //*ALUOUTnew = PC + ext(IR[15-0]<<2)
+        alu(PC, (IR & separa_imediato) << 2, ativa_soma, ALUOUTnew, NULL, NULL);
+    }
+
 }
 
 
