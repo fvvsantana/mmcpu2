@@ -32,6 +32,13 @@
 #define opc_lw 0x23
 #define opc_sw 0x2b
 
+#define func_add 0x20
+#define func_sub 0x22
+#define func_and 0x24
+#define func_or 0x25
+#define func_slt 0x2a
+#define func_nor 0x27
+
 
 #define not_implemented() fprintf(stderr, "Not implemented\n"); exit(EXIT_FAILURE)
 
@@ -229,7 +236,6 @@ void control_unit(int IR, short int *sc)
 
     }
 
-
     //not_implemented();
 
 }
@@ -291,6 +297,86 @@ void decode_register(short int sc, int IR, int PC, int A, int B, int *Anew, int 
 
 void exec_calc_end_branch(short int sc, int A, int B, int IR, int PC, int ALUOUT, int *ALUOUTnew, int *PCnew)
 {
+    //verify if the control signals allow the operation to be done
+    //lw sw
+    if(
+        ((sc & separa_ALUSrcA) == ativa_ALUSrcA) &&
+        ((sc & separa_ALUSrcB1) == ativa_ALUSrcB1) &&
+        ((sc & separa_ALUSrcB0) == 0) &&
+        ((sc & separa_ALUOp1) == 0) &&
+        ((sc & separa_ALUOp0) == 0)
+      ){
+        //*ALUOUTnew = A + ext(IR[15-0])
+        alu(A, (IR & separa_imediato), ativa_soma, ALUOUTnew, NULL, NULL);
+    }
+
+    //r-type
+    if(
+        ((sc & separa_ALUSrcA) == ativa_ALUSrcA) &&
+        ((sc & separa_ALUSrcB1) == 0) &&
+        ((sc & separa_ALUSrcB0) == 0) &&
+        ((sc & separa_ALUOp1) == ativa_ALUOp1) &&
+        ((sc & separa_ALUOp0) == 0)
+      ){
+        //*ALUOUTnew = A op B
+        switch(IR & separa_cfuncao){
+            case func_add:
+                alu(A, B, ativa_soma, ALUOUTnew, NULL, NULL);
+                break;
+
+            case func_sub:
+                alu(A, B, ativa_subtracao, ALUOUTnew, NULL, NULL);
+                break;
+
+            case func_and:
+                alu(A, B, ativa_and, ALUOUTnew, NULL, NULL);
+                break;
+
+            case func_or:
+                alu(A, B, ativa_or, ALUOUTnew, NULL, NULL);
+                break;
+
+            case func_slt:
+                alu(A, B, ativa_slt, ALUOUTnew, NULL, NULL);
+                break;
+
+            case func_nor:
+                alu(A, B, ativa_nor, ALUOUTnew, NULL, NULL);
+                break;
+
+        }
+    }
+
+    //beq
+    if(
+        ((sc & separa_ALUSrcA) == ativa_ALUSrcA) &&
+        ((sc & separa_ALUSrcB1) == 0) &&
+        ((sc & separa_ALUSrcB0) == 0) &&
+        ((sc & separa_ALUOp1) == 0) &&
+        ((sc & separa_ALUOp0) == ativa_ALUOp0) &&
+        ((sc & separa_PCWriteCond) == ativa_PCWriteCond) &&
+        ((sc & separa_PCSource1) == 0) &&
+        ((sc & separa_PCSource0) == ativa_PCSource0)
+      ){
+        //if(A==B) PCnew = ALUOUT
+        char zero;
+        alu(A, B, ativa_subtracao, ALUOUTnew, &zero, NULL);
+        if(zero){
+            *PCnew = ALUOUT;
+        }
+    }
+
+    //jump
+    if(
+        ((sc & separa_PCWrite) == ativa_PCWrite) &&
+        ((sc & separa_PCSource1) == ativa_PCSource1) &&
+        ((sc & separa_PCSource0) == 0)
+      ){
+        //*PCnew = PC + IR[25-0]
+        (*PCnew) += IR & separa_imediato;
+    }
+
+
 }
 
 
