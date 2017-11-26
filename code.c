@@ -440,6 +440,17 @@ void write_r_access_memory(short int sc, int B, int IR, int MDR, int ALUOUT, int
 
 void write_ref_mem(short int sc, int IR, int MDR, int ALUOUT)
 {
+    //verify if the control signals allow the operation to be done
+    //lw
+    if(
+        ((sc & separa_RegDst) == 0) &&
+        ((sc & separa_RegWrite) == ativa_RegWrite) &&
+        ((sc & separa_MemtoReg) == ativa_MemtoReg)      
+        ){
+
+        reg[(IR & separa_rt) >> 16] = MDR;
+    }
+
     not_implemented();
 }
 
