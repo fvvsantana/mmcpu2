@@ -288,8 +288,8 @@ void decode_register(short int sc, int IR, int PC, int A, int B, int *Anew, int 
         ((sc & separa_ALUOp1) == 0) &&
         ((sc & separa_ALUOp0) == 0)
       ){
-        //*ALUOUTnew = PC + ext(IR[15-0]<<2)
-        alu(PC, (IR & separa_imediato) << 2, ativa_soma, ALUOUTnew, NULL, NULL);
+        //*ALUOUTnew = PC + ext(IR[15-0])
+        alu(PC, (IR & separa_imediato), ativa_soma, ALUOUTnew, NULL, NULL);
     }
 
 }
