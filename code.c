@@ -243,7 +243,7 @@ void control_unit(int IR, short int *sc)
 /*alu_control: according to the control signals aluop0 and aluop1 and
  * according to the function code, alu_control put in the output the
  * operation code that is meant to be passed to the ula.  */
-void alu_control(char aluop0, char aluop1, char cfunct, char* output){
+void alu_control(char aluop1, char aluop0, char cfunct, char* output){
     if(aluop1 == 0 && aluop0 == 0){
         *output = ativa_soma;
     }else if(aluop1 == 0 && aluop0 == 1){
@@ -293,8 +293,12 @@ void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int
         ((sc & separa_PCSource0) == 0) &&
         ((sc & separa_PCWrite) == ativa_PCWrite)
       ){
+        //get alu control output
+        char aluControlOutput;
+        alu_control(0, 0, IR & separa_cfuncao, &aluControlOutput);
+
         //update PC (*PCnew = PC + 1)
-        alu(PC, 1, ativa_soma, PCnew, NULL, NULL);
+        alu(PC, 1, aluControlOutput, PCnew, NULL, NULL);
     }
 
     //update mdr
@@ -316,8 +320,12 @@ void decode_register(short int sc, int IR, int PC, int A, int B, int *Anew, int 
         ((sc & separa_ALUOp1) == 0) &&
         ((sc & separa_ALUOp0) == 0)
       ){
+        //get alu control output
+        char aluControlOutput;
+        alu_control(0, 0, IR & separa_cfuncao, &aluControlOutput);
+
         //*ALUOUTnew = PC + ext(IR[15-0])
-        alu(PC, (IR & separa_imediato), ativa_soma, ALUOUTnew, NULL, NULL);
+        alu(PC, (IR & separa_imediato), aluControlOutput, ALUOUTnew, NULL, NULL);
     }
 
 }
@@ -334,8 +342,12 @@ void exec_calc_end_branch(short int sc, int A, int B, int IR, int PC, int ALUOUT
         ((sc & separa_ALUOp1) == 0) &&
         ((sc & separa_ALUOp0) == 0)
       ){
+        //get alu control output
+        char aluControlOutput;
+        alu_control(0, 0, IR & separa_cfuncao, &aluControlOutput);
+
         //*ALUOUTnew = A + ext(IR[15-0])
-        alu(A, (IR & separa_imediato), ativa_soma, ALUOUTnew, NULL, NULL);
+        alu(A, (IR & separa_imediato), aluControlOutput, ALUOUTnew, NULL, NULL);
     }
 
     //r-type
@@ -346,33 +358,13 @@ void exec_calc_end_branch(short int sc, int A, int B, int IR, int PC, int ALUOUT
         ((sc & separa_ALUOp1) == ativa_ALUOp1) &&
         ((sc & separa_ALUOp0) == 0)
       ){
+        //get alu control output
+        char aluControlOutput;
+        alu_control(1, 0, IR & separa_cfuncao, &aluControlOutput);
+
         //*ALUOUTnew = A op B
-        switch(IR & separa_cfuncao){
-            case func_add:
-                alu(A, B, ativa_soma, ALUOUTnew, NULL, NULL);
-                break;
+        alu(A, B, aluControlOutput, ALUOUTnew, NULL, NULL);
 
-            case func_sub:
-                alu(A, B, ativa_subtracao, ALUOUTnew, NULL, NULL);
-                break;
-
-            case func_and:
-                alu(A, B, ativa_and, ALUOUTnew, NULL, NULL);
-                break;
-
-            case func_or:
-                alu(A, B, ativa_or, ALUOUTnew, NULL, NULL);
-                break;
-
-            case func_slt:
-                alu(A, B, ativa_slt, ALUOUTnew, NULL, NULL);
-                break;
-
-            case func_nor:
-                alu(A, B, ativa_nor, ALUOUTnew, NULL, NULL);
-                break;
-
-        }
     }
 
     //beq
@@ -386,9 +378,13 @@ void exec_calc_end_branch(short int sc, int A, int B, int IR, int PC, int ALUOUT
         ((sc & separa_PCSource1) == 0) &&
         ((sc & separa_PCSource0) == ativa_PCSource0)
       ){
+        //get alu control output
+        char aluControlOutput;
+        alu_control(0, 1, IR & separa_cfuncao, &aluControlOutput);
+
         //if(A==B) PCnew = ALUOUT
         char zero;
-        alu(A, B, ativa_subtracao, ALUOUTnew, &zero, NULL);
+        alu(A, B, aluControlOutput, ALUOUTnew, &zero, NULL);
         if(zero){
             *PCnew = ALUOUT;
         }
@@ -400,8 +396,8 @@ void exec_calc_end_branch(short int sc, int A, int B, int IR, int PC, int ALUOUT
         ((sc & separa_PCSource1) == ativa_PCSource1) &&
         ((sc & separa_PCSource0) == 0)
       ){
-        //*PCnew = PC + IR[25-0]
-        (*PCnew) += IR & separa_imediato;
+        //*PCnew = PC[31-28] || (IR[25-0] << 2)
+        (*PCnew) = IR & separa_imediato;
     }
 
 
