@@ -90,7 +90,7 @@ return arguments:
 int *MDRnew, int *IRnew
 */
 
-void write_r_access_memory(short int, int, int, int, int, int *, int *);
+void write_r_access_memory(short int, int, int, int, int, int, int *, int *);
 
 /* 
 void EscreveRefMem(short int sc, int IR, int MDR, int ALUOUT);

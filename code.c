@@ -404,8 +404,37 @@ void exec_calc_end_branch(short int sc, int A, int B, int IR, int PC, int ALUOUT
 }
 
 
-void write_r_access_memory(short int sc, int IR, int MDR, int AMUOUT, int PC, int *MDRnew, int *IRnew)
+void write_r_access_memory(short int sc, int B, int IR, int MDR, int ALUOUT, int PC, int *MDRnew, int *IRnew)
 {
+    //verify if the control signals allow the operation to be done
+    //lw
+    if(
+        ((sc & separa_MemRead) == ativa_MemRead) &&
+        ((sc & separa_IorD) == ativa_IorD)      
+        ){
+
+        *MDRnew = memory[ALUOUT];
+    }
+
+    //sw
+    if(
+        ((sc & separa_MemWrite) == ativa_MemWrite) &&
+        ((sc & separa_IorD) == ativa_IorD)      
+        ){
+
+        memory[ALUOUT] = B;
+    }
+
+    //r-type
+    if(
+        ((sc & separa_RegDst) == ativa_RegDst) &&
+        ((sc & separa_RegWrite) == ativa_RegWrite) &&
+        ((sc & separa_MemtoReg) == 0)      
+        ){
+
+        reg[(IR & separa_rd) >> 11] = ALUOUT;
+    }
+
 }
 
 

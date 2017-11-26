@@ -110,7 +110,7 @@ int main (int argc, char *argv[])
         instruction_fetch(sc, PC, ALUOUT, IR, &PCnew, &IRnew, &MDRnew);
         decode_register(sc, IR, PC, A, B, &Anew, &Bnew, &ALUOUTnew);
         exec_calc_end_branch(sc, A, B, IR, PC, ALUOUT, &ALUOUTnew, &PCnew);
-        write_r_access_memory(sc, B, IR, ALUOUT, PC, &MDRnew, &IRnew);
+        write_r_access_memory(sc, B, IR, MDR, ALUOUT, PC, &MDRnew, &IRnew);
         write_ref_mem(sc, IR, MDR, ALUOUT);
 
 	/* Count cycle. */
