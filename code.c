@@ -240,6 +240,34 @@ void control_unit(int IR, short int *sc)
 
 }
 
+/*alu_control: according to the control signals aluop0 and aluop1 and
+ * according to the function code, alu_control put in the output the
+ * operation code that is meant to be passed to the ula.  */
+void alu_control(char aluop0, char aluop1, char cfunct, char* output){
+    if(aluop1 == 0 && aluop0 == 0){
+        *output = ativa_soma;
+    }else if(aluop1 == 0 && aluop0 == 1){
+        *output = ativa_subtracao;
+    }else if(aluop1 == 1){
+        char last4Bits = cfunct & 0x0f; // 0000 1111
+
+        if(last4Bits == 2){
+            *output = ativa_subtracao;
+        }else if(last4Bits == 10){
+            *output = ativa_slt;
+        }else if(aluop0 == 0){
+            if(last4Bits == 0){
+                *output = ativa_soma;
+            }else if(last4Bits == 4){
+                *output = ativa_and;
+            }else if(last4Bits == 5){
+                *output = ativa_or;
+            }else if(last4Bits == 7){
+                *output = ativa_nor;
+            }
+        }
+    }
+}
 
 void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int* IRnew, int* MDRnew)
 {
