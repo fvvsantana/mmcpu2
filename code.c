@@ -19,8 +19,6 @@
 */
 
 
-/* After you have implemented your functions, you may safely remove these lines. */
-#include <stdio.h>
 #include <stdlib.h>
 #include "mask.h"
 #include "cpu.h"
@@ -39,8 +37,6 @@
 #define func_slt 0x2a
 #define func_nor 0x27
 
-
-#define not_implemented() fprintf(stderr, "Not implemented\n"); exit(EXIT_FAILURE)
 
 /* Students, you are required to implemented the functions bellow.
    Please, refere to cpu.h for further information. */
@@ -457,7 +453,6 @@ void write_ref_mem(short int sc, int IR, int MDR, int ALUOUT)
         reg[(IR & separa_rt) >> 16] = MDR;
     }
 
-    //not_implemented();
 }
 
 
