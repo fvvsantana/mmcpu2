@@ -1,9 +1,9 @@
 /* 
  * Group members:
- * Adilson Vital Junior                         NUSP 
- * Cesar Augusto Lima                           NUSP 
+ * Adilson Vital Junior                         NUSP 9278160
+ * Cesar Augusto Lima                           NUSP 9771525
  * Flavio Vinicius Vieira Santana               NUSP 9866552
- * Leonardo Carneiro Feltran                    NUSP 
+ * Leonardo Carneiro Feltran                    NUSP 9807430
  *
  */
 
@@ -51,7 +51,7 @@
    Please, refere to cpu.h for further information. */
 
 
-
+// Arithmetic logic unit, where the main calculations are made;
 int alu( int a, int b, char alu_op, int *result_alu, char *zero, char *overflow)
 {
     char operation = alu_op & separa_controle_ula;
@@ -134,6 +134,9 @@ char dispatchRom2(char opc){
 
 }
 
+/* The control unit center. Sets up the next state and the control
+ * signals according to addrCtrl and the current state.
+ */
 void control_unit(int IR, short int *sc)
 {
     static char state = 0;
@@ -245,7 +248,8 @@ void control_unit(int IR, short int *sc)
 
 /*alu_control: according to the control signals aluop0 and aluop1 and
  * according to the function code, alu_control put in the output the
- * operation code that is meant to be passed to the ula.  */
+ * operation code that is meant to be passed to the ula.
+ */
 void alu_control(char aluop1, char aluop0, char cfunct, char* output){
     if(aluop1 == 0 && aluop0 == 0){
         *output = ativa_soma;
@@ -272,6 +276,9 @@ void alu_control(char aluop1, char aluop0, char cfunct, char* output){
     }
 }
 
+/* Fetch the instruction from memory at the address pointed by PC,
+ * increment PC by 4 and check the loop condition.
+ */
 void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int* IRnew, int* MDRnew)
 {
 
@@ -283,7 +290,6 @@ void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int
       ){
         //instruction fetch
         *IRnew = memory[PC >> 2];
-
     }
 
     //verify if the control signals allow the operation to be done
@@ -309,13 +315,15 @@ void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int
     //update mdr
     *MDRnew = *IRnew;
 
-
+    //end loop condition
     if(!(*IRnew)){
         loop = 0;
     }
 }
 
-
+/* Get the value of rs and rt and put it in A and B. Further, do a 
+ * speculative calculation for the beq function.
+ */
 void decode_register(short int sc, int IR, int PC, int A, int B, int *Anew, int *Bnew, int *ALUOUTnew)
 {
     //*Anew = reg[IR[25-21]]
@@ -341,7 +349,7 @@ void decode_register(short int sc, int IR, int PC, int A, int B, int *Anew, int 
 
 }
 
-
+// Execution cycle
 void exec_calc_end_branch(short int sc, int A, int B, int IR, int PC, int ALUOUT, int *ALUOUTnew, int *PCnew)
 {
     //verify if the control signals allow the operation to be done
@@ -414,7 +422,7 @@ void exec_calc_end_branch(short int sc, int A, int B, int IR, int PC, int ALUOUT
 
 }
 
-
+// Memory access cycle
 void write_r_access_memory(short int sc, int B, int IR, int MDR, int ALUOUT, int PC, int *MDRnew, int *IRnew)
 {
     //verify if the control signals allow the operation to be done
@@ -448,7 +456,7 @@ void write_r_access_memory(short int sc, int B, int IR, int MDR, int ALUOUT, int
 
 }
 
-
+// Write back cycle
 void write_ref_mem(short int sc, int IR, int MDR, int ALUOUT)
 {
     //verify if the control signals allow the operation to be done
