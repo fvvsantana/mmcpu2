@@ -303,6 +303,11 @@ void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int
 
     //update mdr
     *MDRnew = *IRnew;
+
+
+    if((*IRnew) == 0){
+        loop = 0;
+    }
 }
 
 
