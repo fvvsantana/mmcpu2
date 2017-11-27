@@ -236,8 +236,6 @@ void control_unit(int IR, short int *sc)
 
     }
 
-    //not_implemented();
-
 }
 
 /*alu_control: according to the control signals aluop0 and aluop1 and
@@ -279,7 +277,8 @@ void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int
         ((sc & separa_IRWrite) == ativa_IRWrite)
       ){
         //instruction fetch
-        *IRnew = memory[PC];
+        *IRnew = memory[PC >> 2];
+
     }
 
     //verify if the control signals allow the operation to be done
@@ -297,8 +296,9 @@ void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int
         char aluControlOutput;
         alu_control(0, 0, IR & separa_cfuncao, &aluControlOutput);
 
-        //update PC (*PCnew = PC + 1)
-        alu(PC, 1, aluControlOutput, PCnew, NULL, NULL);
+        //update PC (*PCnew = PC + 4)
+        alu(PC, 4, aluControlOutput, PCnew, NULL, NULL);
+
     }
 
     //update mdr
@@ -315,6 +315,7 @@ void decode_register(short int sc, int IR, int PC, int A, int B, int *Anew, int 
 {
     //*Anew = reg[IR[25-21]]
     *Anew = reg[(IR & separa_rs) >> 21];
+    //*Bnew = reg[IR[20-16]]
     *Bnew = reg[(IR & separa_rt) >> 16];
 
     //verify if the control signals allow the operation to be done
@@ -329,8 +330,8 @@ void decode_register(short int sc, int IR, int PC, int A, int B, int *Anew, int 
         char aluControlOutput;
         alu_control(0, 0, IR & separa_cfuncao, &aluControlOutput);
 
-        //*ALUOUTnew = PC + ext(IR[15-0])
-        alu(PC, (IR & separa_imediato), aluControlOutput, ALUOUTnew, NULL, NULL);
+        //*ALUOUTnew = PC + ext(IR[15-0] << 2)
+        alu(PC, (IR & separa_imediato) << 2, aluControlOutput, ALUOUTnew, NULL, NULL);
     }
 
 }
@@ -402,7 +403,7 @@ void exec_calc_end_branch(short int sc, int A, int B, int IR, int PC, int ALUOUT
         ((sc & separa_PCSource0) == 0)
       ){
         //*PCnew = PC[31-28] || (IR[25-0] << 2)
-        (*PCnew) = IR & separa_imediato;
+        (*PCnew) = (IR & separa_imediato) << 2;
     }
 
 
@@ -418,7 +419,7 @@ void write_r_access_memory(short int sc, int B, int IR, int MDR, int ALUOUT, int
         ((sc & separa_IorD) == ativa_IorD)      
         ){
 
-        *MDRnew = memory[ALUOUT];
+        *MDRnew = memory[ALUOUT >> 2];
     }
 
     //sw
@@ -427,7 +428,7 @@ void write_r_access_memory(short int sc, int B, int IR, int MDR, int ALUOUT, int
         ((sc & separa_IorD) == ativa_IorD)      
         ){
 
-        memory[ALUOUT] = B;
+        memory[ALUOUT >> 2] = B;
     }
 
     //r-type
@@ -456,7 +457,7 @@ void write_ref_mem(short int sc, int IR, int MDR, int ALUOUT)
         reg[(IR & separa_rt) >> 16] = MDR;
     }
 
-    not_implemented();
+    //not_implemented();
 }
 
 
