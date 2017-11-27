@@ -91,7 +91,7 @@ int alu( int a, int b, char alu_op, int *result_alu, char *zero, char *overflow)
     }
 
     //update zero value
-    if(zero) *zero = !(result_alu);
+    if(zero) *zero = !(*result_alu);
 
     return 0;
 }
