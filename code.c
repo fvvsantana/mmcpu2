@@ -1,3 +1,12 @@
+/* 
+ * Group members:
+ * Adilson Vital Junior                         NUSP 
+ * Cesar Augusto Lima                           NUSP 
+ * Flavio Vinicius Vieira Santana               NUSP 9866552
+ * Leonardo Carneiro Feltran                    NUSP 
+ *
+ */
+
 /* code-c - Student's code for mmcpu
 
    Copyright 2017  Monaco F. J.   <monaco@icmc.usp.br>
