@@ -305,7 +305,7 @@ void instruction_fetch(short int sc, int PC, int ALUOUT, int IR, int* PCnew, int
     *MDRnew = *IRnew;
 
 
-    if((*IRnew) == 0){
+    if(!(*IRnew)){
         loop = 0;
     }
 }
