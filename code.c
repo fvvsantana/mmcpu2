@@ -7,27 +7,6 @@
  *
  */
 
-/* code-c - Student's code for mmcpu
-
-   Copyright 2017  Monaco F. J.   <monaco@icmc.usp.br>
-
-   This file is part of Muticlycle Mips CPU (MMCPU)
-
-   MMCPU is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
 #include <stdlib.h>
 #include "mask.h"
 #include "cpu.h"
@@ -45,10 +24,6 @@
 #define func_or 0x25
 #define func_slt 0x2a
 #define func_nor 0x27
-
-
-/* Students, you are required to implemented the functions bellow.
-   Please, refere to cpu.h for further information. */
 
 
 // Arithmetic logic unit, where the main calculations are made;
